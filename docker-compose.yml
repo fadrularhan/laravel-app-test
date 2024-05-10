@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  laravel-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: laravel-app
+    restart: unless-stopped
+    volumes:
+      - .:/var/www/html
+    networks:
+      - laravel
+
+  nginx:
+    build:
+      context: .
+      dockerfile: nginx/Dockerfile
+    container_name: nginx
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    volumes:
+      - .:/var/www/html
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - laravel
+
+networks:
+  laravel:
+    driver: bridge
